@@ -1,0 +1,23 @@
+name: 'AWS SSM get parameters'
+description: 'GitHub Action to retrieve parameters from AWS SSM and set them as either environment variables or an env file for use in subsequent steps.'
+inputs:
+    format:
+        required: false
+        description: 'The format you would like the parameters to be set in. Can be either env or env-file. Defaults to env.'
+        default: 'env'
+    parameters:
+        required: true
+        description: 'List of SSM parameter names or wildcard patterns to retrieve, separated by commas. For example: /myapp/*, /anotherapp/param1'
+    with-decryption:
+        required: false
+        description: 'Whether to decrypt SecretString SSM parameters. Defaults to true.'
+        default: 'true'
+    aws-region:
+        required: false
+        description: 'The AWS region where the SSM parameters are stored. If not provided, the action will attempt to determine the region from the environment or AWS configuration.'
+runs:
+    using: 'node24'
+    main: 'dist/index.js'
+branding:
+    icon: 'download-cloud'
+    color: 'green'

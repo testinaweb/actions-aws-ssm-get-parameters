@@ -1,0 +1,23 @@
+{
+  "name": "getparametersfromssm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc && ncc build -o dist/restore src/restore.ts",
+    "package": "ncc build --source-map --license licenses.txt",
+    "test": "jest --passWithNoTests",
+    "all": "npm run build && npm run package && npm test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "@vercel/ncc": "^0.38.4",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@actions/core": "^3.0.0",
+    "@aws-sdk/client-ssm": "^3.1004.0"
+  }
+}
