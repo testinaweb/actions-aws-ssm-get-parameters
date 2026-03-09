@@ -51,13 +51,17 @@ export class Action {
     }
 
     for (const wildcard of wildcards) {
-      const secretsFromWildcard = await this.parameterProvider.getParametersByPath(wildcard, withDecryption);
+      const secretsFromWildcard = await this.parameterProvider.getParametersByPath(
+        wildcard.substring(0, wildcard.length - 1), // remove the trailing '*' to get the path
+        withDecryption
+      );
       info(`Processed wildcard: ${wildcard} with ${secretsFromWildcard?.length || 0} secrets`);
       secrets.push(...secretsFromWildcard);
     }
     return secrets;
   }
 
+  // This function is currently not used but can be used in the future to process parameters in chunks if needed
   async processParameters(parameters: string[], withDecryption: ActionParams['withDecryption'] = true): Promise<Secret[]> {
     const secrets: Secret[] = [];
     for (let i = 0; i < parameters.length; i += 10) {
@@ -69,6 +73,7 @@ export class Action {
     return secrets;
   }
 
+  // This function formats the secrets as environment variables and sets them as outputs
   formatToEnvironmentVariables(secrets: Secret[]): void{
     for (const secret of secrets) {
       exportVariable(secret.key, secret.value);
@@ -76,6 +81,7 @@ export class Action {
     }
   }
 
+  // This function formats the secrets as an env file and sets the content as an output
   formatToEnvFile(secrets: Secret[]): void {
     const envFileContent = secrets.map(secret => `${secret.key}=${secret.value}`).join('\n');
     setOutput('envFileContent', envFileContent);
@@ -115,6 +121,7 @@ export class Action {
   }
 }
 
+// This factory function creates an instance of the Action class with a ParameterProvider instance
 const actionFactory = () => {
   return new Action(new ParameterProvider());
 }

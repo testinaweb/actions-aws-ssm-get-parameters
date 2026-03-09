@@ -1,5 +1,5 @@
 import { getInput, info, setSecret } from "@actions/core";
-import { SSMClient, GetParametersByPathCommand,GetParametersCommand, GetParametersCommandInput, SSMClientConfig, GetParametersCommandOutput, GetParametersByPathCommandOutput} from '@aws-sdk/client-ssm';
+import { SSMClient, GetParametersByPathCommand,GetParametersCommand, GetParametersCommandInput, SSMClientConfig, GetParametersCommandOutput, GetParametersByPathCommandOutput, GetParametersByPathCommandInput} from '@aws-sdk/client-ssm';
 
 export interface Secret {
   key: string;
@@ -26,21 +26,12 @@ export class ParameterProvider {
   }
 
   async getParametersByPath(path: string, withDecryption: boolean): Promise<Secret[]> {
-    const input = { // GetParametersByPathRequest
-      Path: "STRING_VALUE", // required
-      Recursive: true || false,
-      ParameterFilters: [ // ParameterStringFilterList
-        { // ParameterStringFilter
-          Key: "STRING_VALUE", // required
-          Option: "STRING_VALUE",
-          Values: [ // ParameterStringFilterValueList
-            "STRING_VALUE",
-          ],
-        },
-      ],
-      WithDecryption: true || false,
-      MaxResults: Number("int"),
-      NextToken: "STRING_VALUE",
+    const input: GetParametersByPathCommandInput = {
+      Path: path,
+      Recursive: true,
+      WithDecryption: withDecryption,
+      // MaxResults: Number("int"),
+      // NextToken: "STRING_VALUE",
     };
     const command = new GetParametersByPathCommand(input);
     const response = (await this.client.send(command)) as GetParametersByPathCommandOutput;
