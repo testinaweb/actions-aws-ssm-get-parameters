@@ -25,16 +25,19 @@ export class ParameterProvider {
     }
   }
 
-  async getParametersByPath(path: string, withDecryption: boolean): Promise<Secret[]> {
+  async getParametersByPath(path: string, withDecryption: boolean, nextToken: string | undefined = undefined): Promise<Secret[]> {
     const input: GetParametersByPathCommandInput = {
       Path: path,
       Recursive: true,
       WithDecryption: withDecryption,
-      // MaxResults: Number("int"),
-      // NextToken: "STRING_VALUE",
+      NextToken: nextToken,
     };
     const command = new GetParametersByPathCommand(input);
     const response = (await this.client.send(command)) as GetParametersByPathCommandOutput;
+    if (response.NextToken) {
+      const nextSecrets = await this.getParametersByPath(path, withDecryption, response.NextToken);
+      return [...this.prepareResponse(response), ...nextSecrets];
+    }
     return this.prepareResponse(response);
   }
 
