@@ -2,10 +2,11 @@
   "name": "getparametersfromssm",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc && ncc build -o dist/restore src/restore.ts",
-    "package": "ncc build --source-map --license licenses.txt",
+    "build": "tsc && ncc build -o dist lib/index.js && rm -f dist/package.json",
+    "package": "ncc build -o dist --source-map --license licenses.txt lib/index.js && rm -f dist/package.json",
     "test": "jest --passWithNoTests",
     "all": "npm run build && npm run package && npm test"
   },
