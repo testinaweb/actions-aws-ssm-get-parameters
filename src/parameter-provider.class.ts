@@ -12,11 +12,11 @@ export class ParameterProvider {
   constructor(client?: SSMClient, awsRegion?: string) {
     if (!client) {
       const config: SSMClientConfig = {};
-      let awsRegionParam = awsRegion;
+      let awsRegionParam = awsRegion || process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION;
       if (!awsRegionParam) {
         awsRegionParam = getInput('aws-region');
       }
-      if (!awsRegionParam) {
+      if (awsRegionParam) {
         config.region = awsRegionParam;
       }
       this.client = new SSMClient(config);
